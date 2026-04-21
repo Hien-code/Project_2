@@ -12,20 +12,17 @@ import org.springframework.stereotype.Service;
 
 import com.javaweb.repository.RentAreaRepository;
 import com.javaweb.repository.entity.RentAreaEntity;
+import com.javaweb.utils.ConnectionJDBCUtil;
 
 @Service
 public class RentAreaRepositoryImpl implements RentAreaRepository {
-	
-	static final String DB_URL = "jdbc:mysql://localhost:3306/estatebasic";
-	static final String USER = "root";
-	static final String PASS = "hien18092002";
 
 	@Override
 	public List<RentAreaEntity> getValueByBuildingId(Long id) {
 		String sql = " select * from rentarea where rentarea.buildingid = " + id ;
 		List<RentAreaEntity> rentAreaEntities = new ArrayList<>();
 
-		try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+		try (Connection conn = ConnectionJDBCUtil.getConnection();
 				Statement stmt = conn.createStatement();
 				ResultSet rs = stmt.executeQuery(sql.toString())) {
 			System.out.println("Connected database successfully...");
