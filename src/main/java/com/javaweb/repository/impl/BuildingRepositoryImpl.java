@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
 import com.javaweb.builder.BuildingSearchBuilder;
@@ -118,7 +119,8 @@ public class BuildingRepositoryImpl implements BuildingRepository {
 				buildingEntity.setId(rs.getLong("id"));
 				buildingEntity.setName(rs.getString("name"));
 				buildingEntity.setWard(rs.getString("ward"));
-				buildingEntity.setDistrictid(rs.getLong("districtid"));
+				buildingEntity.setdistrictId(rs.getLong("districtid"));
+				;
 				buildingEntity.setStreet(rs.getString("street"));
 				buildingEntity.setFloorArea(rs.getLong("floorarea"));
 				buildingEntity.setRentPrice(rs.getLong("rentprice"));

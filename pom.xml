@@ -34,5 +34,11 @@
 			<version>3.2.6</version>
 			<scope>compile</scope>
 		</dependency>
+		<!-- Source:
+		https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-jpa -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
 	</dependencies>
 </project>  
