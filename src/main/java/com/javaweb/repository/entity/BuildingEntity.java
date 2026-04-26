@@ -31,8 +31,8 @@ public class BuildingEntity {
 	@Column(name = "street")
 	private String street;
 
-	@Column(name = "districtid", insertable = false, updatable = false)
-	private Long districtId;
+//	@Column(name = "districtid", insertable = false, updatable = false)
+//	private Long districtId;
 
 	@Column(name = "managername")
 	private String managerName;
@@ -68,14 +68,6 @@ public class BuildingEntity {
 
 	public void setRentAreaEntities(List<RentAreaEntity> rentAreaEntities) {
 		this.rentAreaEntities = rentAreaEntities;
-	}
-
-	public Long getDistrictId() {
-		return districtId;
-	}
-
-	public void setDistrictId(Long districtId) {
-		this.districtId = districtId;
 	}
 
 	public DistrictEntity getDistrictEntity() {
@@ -124,14 +116,6 @@ public class BuildingEntity {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public Long getdistrictId() {
-		return districtId;
-	}
-
-	public void setdistrictId(Long districtId) {
-		this.districtId = districtId;
 	}
 
 	public String getManagerName() {

@@ -1,25 +1,25 @@
 package com.javaweb.repository.impl;
 
 import java.lang.reflect.Field;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.context.annotation.Primary;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+
 import org.springframework.stereotype.Repository;
 
 import com.javaweb.builder.BuildingSearchBuilder;
 import com.javaweb.repository.BuildingRepository;
 import com.javaweb.repository.entity.BuildingEntity;
-import com.javaweb.utils.ConnectionJDBCUtil;
 import com.javaweb.utils.StringUtil;
 
 @Repository
 public class BuildingRepositoryImpl implements BuildingRepository {
+	
+	@PersistenceContext
+	private EntityManager entityManager;
 
 	// 1. Xử lý các câu lệnh JOIN bảng
 	public static void joinTable(BuildingSearchBuilder builder, StringBuilder sql) {
@@ -105,35 +105,32 @@ public class BuildingRepositoryImpl implements BuildingRepository {
 		sql.append(where);
 		sql.append(" GROUP BY b.id");
 
-		System.out.println("Final SQL: " + sql.toString());
+		Query query = entityManager.createNativeQuery(sql.toString(), BuildingEntity.class);
+		
+		return query.getResultList();
+	}
 
-		List<BuildingEntity> result = new ArrayList<>();
+	@Override
+	public BuildingEntity findById(Long id) {
+		return entityManager.find(BuildingEntity.class, id);
+	}
 
-		// Bước 3: Thực thi JDBC với try-with-resources
-		try (Connection conn = ConnectionJDBCUtil.getConnection();
-				Statement stmt = conn.createStatement();
-				ResultSet rs = stmt.executeQuery(sql.toString())) {
-
-			while (rs.next()) {
-				BuildingEntity buildingEntity = new BuildingEntity();
-				buildingEntity.setId(rs.getLong("id"));
-				buildingEntity.setName(rs.getString("name"));
-				buildingEntity.setWard(rs.getString("ward"));
-				buildingEntity.setdistrictId(rs.getLong("districtid"));
-				;
-				buildingEntity.setStreet(rs.getString("street"));
-				buildingEntity.setFloorArea(rs.getLong("floorarea"));
-				buildingEntity.setRentPrice(rs.getLong("rentprice"));
-				buildingEntity.setServiceFee(rs.getString("servicefee"));
-				buildingEntity.setBrokerageFee(rs.getLong("brokeragefee"));
-				buildingEntity.setManagerName(rs.getString("managername"));
-				buildingEntity.setManagerPhoneNumber(rs.getString("managerphonenumber"));
-				buildingEntity.setNumberOfBasement(rs.getInt("numberofbasement"));
-				result.add(buildingEntity);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
+	@Override
+	public void save(BuildingEntity buildingEntity) {
+		if (buildingEntity.getId() != null) {
+			// Có ID -> Update
+			entityManager.merge(buildingEntity);
+		} else {
+			// Không có ID -> Insert
+			entityManager.persist(buildingEntity);
 		}
-		return result;
+	}
+
+	@Override
+	public void deleteById(Long id) {
+		BuildingEntity entity = entityManager.find(BuildingEntity.class, id);
+		if (entity != null) {
+			entityManager.remove(entity);
+		}
 	}
 }

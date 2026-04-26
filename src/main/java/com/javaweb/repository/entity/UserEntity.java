@@ -8,30 +8,33 @@ import javax.persistence.*;
 @Table(name = "user")
 public class UserEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @Column(name = "username")
-    private String userName;
+	@Column(name = "username")
+	private String userName;
 
-    @Column(name = "password")
-    private String password;
+	@Column(name = "password")
+	private String password;
 
-    @Column(name = "fullname")
-    private String fullName;
+	@Column(name = "fullname")
+	private String fullName;
 
-    @Column(name = "phone")
-    private String phone;
+	@Column(name = "phone")
+	private String phone;
 
-    @Column(name = "email")
-    private String email;
+	@Column(name = "email")
+	private String email;
 
-    @Column(name = "status")
-    private Integer status;
+	@Column(name = "status")
+	private Integer status;
 
-    @OneToMany(mappedBy = "userEntity", fetch = FetchType.LAZY)
-    private List<UserRoleEntity> userRoles = new ArrayList<>();
+	@ManyToMany(fetch = FetchType.LAZY)
+		@JoinTable(name = "user_role", 
+		joinColumns = @JoinColumn(name = "userid", nullable = false), 
+		inverseJoinColumns = @JoinColumn(name = "roleid", nullable = false))
+	private List<RoleEntity> roles = new ArrayList<>();
 
 	public Long getId() {
 		return id;
@@ -89,15 +92,13 @@ public class UserEntity {
 		this.status = status;
 	}
 
-	public List<UserRoleEntity> getUserRoles() {
-		return userRoles;
+	public List<RoleEntity> getRoles() {
+		return roles;
 	}
 
-	public void setUserRoles(List<UserRoleEntity> userRoles) {
-		this.userRoles = userRoles;
+	public void setRoles(List<RoleEntity> roles) {
+		this.roles = roles;
 	}
-    
-    
 
-    
+
 }
