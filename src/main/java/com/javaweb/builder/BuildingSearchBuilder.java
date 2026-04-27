@@ -26,7 +26,7 @@ public class BuildingSearchBuilder {
 		this.street = builder.street;
 		this.districtId = builder.districtId;
 		this.numberOfBasement = builder.numberOfBasement;
-		this.typeCode = new ArrayList<>(builder.typeCode); 
+		this.typeCode = builder.typeCode;
 		this.managerName = builder.managerName;
 		this.managerPhoneNumber = builder.managerPhoneNumber;
 		this.rentPriceFrom = builder.rentPriceFrom;
