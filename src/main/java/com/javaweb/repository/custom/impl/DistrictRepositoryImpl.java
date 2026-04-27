@@ -1,4 +1,4 @@
-package com.javaweb.repository.impl;
+package com.javaweb.repository.custom.impl;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -7,12 +7,12 @@ import com.javaweb.repository.DistrictRepository;
 import com.javaweb.repository.entity.DistrictEntity;
 
 @Repository
-public class DistrictRepositoryImpl implements DistrictRepository {
+public class DistrictRepositoryImpl {
 
 	@PersistenceContext
 	private EntityManager entityManager;
 
-	@Override
+
 	public DistrictEntity findNameById(Long id) {
 		// JPA thuần: Dùng EntityManager để tìm Entity theo ID
 		return entityManager.find(DistrictEntity.class, id);

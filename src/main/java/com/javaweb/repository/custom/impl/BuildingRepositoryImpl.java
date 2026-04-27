@@ -1,4 +1,4 @@
-package com.javaweb.repository.impl;
+package com.javaweb.repository.custom.impl;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -11,13 +11,13 @@ import javax.persistence.Query;
 import org.springframework.stereotype.Repository;
 
 import com.javaweb.builder.BuildingSearchBuilder;
-import com.javaweb.repository.BuildingRepository;
+import com.javaweb.repository.custom.BuildingRepositoryCustom;
 import com.javaweb.repository.entity.BuildingEntity;
 import com.javaweb.utils.StringUtil;
 
 @Repository
-public class BuildingRepositoryImpl implements BuildingRepository {
-	
+public class BuildingRepositoryImpl implements BuildingRepositoryCustom {
+
 	@PersistenceContext
 	private EntityManager entityManager;
 
@@ -93,10 +93,9 @@ public class BuildingRepositoryImpl implements BuildingRepository {
 				"SELECT b.id, b.name, b.districtid, b.street, b.ward, b.numberofbasement, "
 						+ "b.floorarea, b.rentprice, b.managername, b.managerphonenumber, b.servicefee, b.brokeragefee "
 						+ "FROM building b ");
-
 		// Bước 1: Nối JOIN
 		joinTable(builder, sql);
-
+		
 		// Bước 2: Nối WHERE
 		StringBuilder where = new StringBuilder("\nWHERE 1 = 1 ");
 		queryNormal(builder, where);
@@ -106,31 +105,7 @@ public class BuildingRepositoryImpl implements BuildingRepository {
 		sql.append(" GROUP BY b.id");
 
 		Query query = entityManager.createNativeQuery(sql.toString(), BuildingEntity.class);
-		
+
 		return query.getResultList();
-	}
-
-	@Override
-	public BuildingEntity findById(Long id) {
-		return entityManager.find(BuildingEntity.class, id);
-	}
-
-	@Override
-	public void save(BuildingEntity buildingEntity) {
-		if (buildingEntity.getId() != null) {
-			// Có ID -> Update
-			entityManager.merge(buildingEntity);
-		} else {
-			// Không có ID -> Insert
-			entityManager.persist(buildingEntity);
-		}
-	}
-
-	@Override
-	public void deleteById(Long id) {
-		BuildingEntity entity = entityManager.find(BuildingEntity.class, id);
-		if (entity != null) {
-			entityManager.remove(entity);
-		}
 	}
 }

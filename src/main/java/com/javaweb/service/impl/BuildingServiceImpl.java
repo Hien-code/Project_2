@@ -24,7 +24,7 @@ public class BuildingServiceImpl implements BuildingService {
 
 	@Autowired
 	private BuildingRepository buildingRepository;
-	
+
 	@Autowired
 	private DistrictRepository districtRepository;
 
@@ -37,8 +37,9 @@ public class BuildingServiceImpl implements BuildingService {
 	@Override
 	public List<BuildingDTO> findAll(Map<String, Object> params, List<String> typeCode) {
 		BuildingSearchBuilder buildingSearchBuilder = buildingSearchBuilderConverter.toBuildingSearchBuilder(params, typeCode);
+        // Gọi hàm findAll từ Custom Repository
 		List<BuildingEntity> buildingEntities = buildingRepository.findAll(buildingSearchBuilder);
-		
+
 		List<BuildingDTO> result = new ArrayList<>();
 		for (BuildingEntity item : buildingEntities) {
 			result.add(buildingDTOConverter.toBuildingDTO(item));
@@ -50,9 +51,11 @@ public class BuildingServiceImpl implements BuildingService {
 	@Transactional
 	public void saveOrUpdate(BuildingRequestDTO dto, Long id) {
 		BuildingEntity buildingEntity = new BuildingEntity();
-		
-		if (id != null) { // Update
-			buildingEntity = buildingRepository.findById(id);
+
+		if (id != null) {
+            // Spring Data JPA trả về Optional, phải dùng orElseThrow để bóc tách an toàn
+			buildingEntity = buildingRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Không tìm thấy tòa nhà với ID: " + id));
 		}
 
 		// Mapping dữ liệu
@@ -66,18 +69,19 @@ public class BuildingServiceImpl implements BuildingService {
 		buildingEntity.setBrokerageFee(dto.getBrokerageFee());
 		buildingEntity.setManagerName(dto.getManagerName());
 		buildingEntity.setManagerPhoneNumber(dto.getManagerPhoneNumber());
-		
-		// Tìm District bằng JPA
-		DistrictEntity districtEntity = districtRepository.findNameById(dto.getDistrictId());
+
+		// Lấy District bằng findById mặc định của Spring
+		DistrictEntity districtEntity = districtRepository.findById(dto.getDistrictId())
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy Quận!"));
 		buildingEntity.setDistrictEntity(districtEntity);
 
-		// Lưu xuống DB
 		buildingRepository.save(buildingEntity);
 	}
 
 	@Override
 	@Transactional
 	public void deleteBuilding(Long id) {
+        // Dùng hàm deleteById mặc định của JpaRepository
 		buildingRepository.deleteById(id);
 	}
 }
