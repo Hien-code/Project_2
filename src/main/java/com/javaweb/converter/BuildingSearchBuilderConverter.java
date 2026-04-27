@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import com.javaweb.builder.BuildingSearchBuilder;
 import com.javaweb.utils.MapUtil;
 
+//Xử lý data từ URL đúc thành khuôn tìm kiếm.
 @Component
 public class BuildingSearchBuilderConverter {
 	public BuildingSearchBuilder toBuildingSearchBuilder(Map<String, Object> params, List<String> typeCode) {

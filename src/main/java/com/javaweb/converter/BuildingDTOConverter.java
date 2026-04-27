@@ -11,6 +11,7 @@ import com.javaweb.model.BuildingDTO;
 import com.javaweb.repository.entity.BuildingEntity;
 import com.javaweb.repository.entity.RentAreaEntity;
 
+//Lấy Thực thể từ DB ra "trang điểm" thành DTO để trả về cho Client.
 @Component
 public class BuildingDTOConverter {
 
